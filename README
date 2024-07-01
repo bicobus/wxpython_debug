@@ -1,0 +1,17 @@
+To run this file please follow the following instruction:
+
+1. create a virtual environment
+
+    python -m venv .venv
+    
+2. Activate the virtual environment
+
+    . .venv/bin/activate
+    
+3. Install dependencies
+
+    pip install --upgrade pip wheel setuptools wxpython
+    
+4. Run previewframe.py
+
+    ./previewframe.py
