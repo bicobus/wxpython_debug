@@ -28,6 +28,7 @@ jobs:
       - name: Packaging
         run: |
           cd build/exe.win-amd64-3.11
+          cp -r ../../imgs .
           7z a ../../wxtest.7z .
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
