@@ -22,7 +22,7 @@ jobs:
           python-version: ${{ env.PYTHON }}
       - name: Install dependencies
         run: |
-          pip install --upgrade pip wheel setuptools wxpython cxFreeze
+          pip install --upgrade pip wheel setuptools wxpython cx-freeze
       - name: cxFreeze build
         run: python setup.py build
       - name: Packaging
