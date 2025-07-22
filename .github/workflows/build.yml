@@ -30,7 +30,7 @@ jobs:
           cd build/exe.win-amd64-3.11
           7z a ../../wxtest.7z .
       - name: Archive artifacts
-        uses: actions/upload-artifacts@v4
+        uses: actions/upload-artifact@v4
         with:
           name: windows-build
           path: wxtest.7z
