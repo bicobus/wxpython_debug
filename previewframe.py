@@ -49,13 +49,18 @@ class BaseWindow(wx.Frame):
         button1 = wx.Button(panel, wx.ID_ANY, "Preview: legacy")
         button2 = wx.Button(panel, wx.ID_ANY, "Preview: destruction")
         version_info = wx.StaticText(panel, wx.ID_ANY, "Version: %s" % wx.version())
+        os_info = wx.StaticText(
+            panel,
+            wx.ID_ANY,
+            "OS: %s" % wx.PlatformInformation().GetOperatingSystemIdName()
+        )
         sizer.Add(button1)
         sizer.Add(button2)
         sizer.Add(version_info)
+        sizer.Add(os_info)
         panel.SetSizer(sizer)
         self.Bind(wx.EVT_BUTTON, self.on_click, button1)
         self.Bind(wx.EVT_BUTTON, self.on_click2, button2)
-        print(wx.PlatformInformation().GetOperatingSystemIdName())
 
     def on_click(self, evt):
         self.previewframe = wx.Frame(
@@ -158,8 +163,8 @@ class PreviewEvent(wx.Panel):
         return wx.Bitmap(str(img), wx.BITMAP_TYPE_PNG)
 
     def on_erase_background(self, evt):
-        if not self._refresh_bg:
-            return
+        # if not self._refresh_bg:
+        #     return
         dc = evt.GetDC()
         if not dc:
             dc = wx.ClientDC(self)
