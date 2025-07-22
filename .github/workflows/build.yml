@@ -25,13 +25,12 @@ jobs:
           pip install --upgrade pip wheel setuptools wxpython cx-freeze
       - name: cxFreeze build
         run: python setup.py build
-      - name: Packaging
+      - name: Prepare artifact
         run: |
-          cd build/exe.win-amd64-3.11
-          cp -r ../../imgs .
-          7z a ../../wxtest.7z .
+          mv build/exe.win-amd64-3.11/ wxtest/
+          cp -r imgs wxtest/
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: wxtest.7z
+          path: wxtest

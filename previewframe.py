@@ -24,7 +24,10 @@ TEST_DATA = {
     "l_2": {
         "text": "test 2",
         "img": "imgs/test_2.png",
-        "options": [{"label": "END 2"}]
+        "options": [
+            {"label": "begining", "target": "l_1"},
+            {"label": "END 2"},
+        ],
     }
 }
 
@@ -86,6 +89,7 @@ class PreviewEvent(wx.Panel):
         self.SetBackgroundStyle(wx.BG_STYLE_ERASE)
         self.frame = parent
         self.background_img = None
+        self._refresh_bg = True
 
         self.set_bgimg(data)
         self.build_widgets(data)
@@ -133,15 +137,18 @@ class PreviewEvent(wx.Panel):
 
     def on_button_clicked(self, evt):
         wdg = evt.GetEventObject()
-        if wdg.data_key not in TEST_DATA.keys():
-            return False
+        if wdg.data_key not in TEST_DATA:
+            return
         data = TEST_DATA[wdg.data_key]
+
+        self._refresh_bg = True
         self.DestroyChildren()
         self.ClearBackground()
         self.set_bgimg(data)
         self.build_widgets(data)
         self.Layout()
-        self.Refresh()
+        if wx.PlatformInformation().GetOperatingSystemIdName() != "Unix":
+            self.Refresh()
 
     def get_bitmap(self, img):
         if isinstance(img, wx.Bitmap):
@@ -149,6 +156,8 @@ class PreviewEvent(wx.Panel):
         return wx.Bitmap(str(img), wx.BITMAP_TYPE_PNG)
 
     def on_erase_background(self, evt):
+        if not self._refresh_bg:
+            return
         dc = evt.GetDC()
         if not dc:
             dc = wx.ClientDC(self)
@@ -156,6 +165,7 @@ class PreviewEvent(wx.Panel):
             dc.SetClippingRegion(rect)
         dc.Clear()
         dc.DrawBitmap(self.get_bitmap(self.background_img), 0, 0)
+        self._refresh_bg = False
 
 
 class PreviewEvent2(PreviewEvent):
