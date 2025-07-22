@@ -42,19 +42,36 @@ class BaseWindow(wx.Frame):
             parent, title="Base window", size=(700, 650), pos=wx.DefaultPosition
         )
         panel = wx.Panel(self, -1)
-        button = wx.Button(panel, wx.ID_ANY, "Preview")
-        self.Bind(wx.EVT_BUTTON, self.on_click, button)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        button1 = wx.Button(panel, wx.ID_ANY, "Preview: legacy")
+        button2 = wx.Button(panel, wx.ID_ANY, "Preview: destruction")
+        sizer.Add(button1)
+        sizer.Add(button2)
+        panel.SetSizer(sizer)
+        self.Bind(wx.EVT_BUTTON, self.on_click, button1)
+        self.Bind(wx.EVT_BUTTON, self.on_click2, button2)
 
     def on_click(self, evt):
         self.previewframe = wx.Frame(
             self, size=(445, 805), style=wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER
         )
         self.previewframe.Bind(wx.EVT_CLOSE, self.preview_on_close)
-        self.previewframe.SetTitle("Preview: Test")
+        self.previewframe.SetTitle("Preview: legacy")
         PreviewEvent(self.previewframe, TEST_DATA['l_1'])
         self.previewframe.Center()
         self.previewframe.Show()
         return
+
+    def on_click2(self, evt, data=None):
+        self.previewframe = wx.Frame(
+            self, size=(445, 805), style=wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER
+        )
+        self.previewframe.Bind(wx.EVT_CLOSE, self.preview_on_close)
+        self.previewframe.SetTitle("Preview: destruction")
+        data = TEST_DATA['l_1'] if not data else data
+        PreviewEvent2(self.previewframe, data)
+        self.previewframe.Center()
+        self.previewframe.Show()
 
     def preview_on_close(self, evt):
         self.previewframe.Destroy()
@@ -136,6 +153,17 @@ class PreviewEvent(wx.Panel):
             dc.SetClippingRegion(rect)
         dc.Clear()
         dc.DrawBitmap(self.get_bitmap(self.background_img), 0, 0)
+
+
+class PreviewEvent2(PreviewEvent):
+    def on_button_clicked(self, evt):
+        wdg = evt.GetEventObject()
+        if wdg.data_key not in TEST_DATA.keys():
+            return False
+        data = TEST_DATA[wdg.data_key]
+        self.frame.GetParent().on_click2(evt=None, data=data)
+        self.frame.Hide()
+        self.Destroy()
 
 
 if __name__ == '__main__':
