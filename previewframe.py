@@ -55,6 +55,7 @@ class BaseWindow(wx.Frame):
         panel.SetSizer(sizer)
         self.Bind(wx.EVT_BUTTON, self.on_click, button1)
         self.Bind(wx.EVT_BUTTON, self.on_click2, button2)
+        print(wx.PlatformInformation().GetOperatingSystemIdName())
 
     def on_click(self, evt):
         self.previewframe = wx.Frame(
@@ -148,7 +149,8 @@ class PreviewEvent(wx.Panel):
         self.build_widgets(data)
         self.Layout()
         if wx.PlatformInformation().GetOperatingSystemIdName() != "Unix":
-            self.Refresh()
+            print("reached")
+        self.Refresh()
 
     def get_bitmap(self, img):
         if isinstance(img, wx.Bitmap):
