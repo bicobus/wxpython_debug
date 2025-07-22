@@ -45,8 +45,10 @@ class BaseWindow(wx.Frame):
         sizer = wx.BoxSizer(wx.VERTICAL)
         button1 = wx.Button(panel, wx.ID_ANY, "Preview: legacy")
         button2 = wx.Button(panel, wx.ID_ANY, "Preview: destruction")
+        version_info = wx.StaticText(panel, wx.ID_ANY, "Version: %s" % wx.version())
         sizer.Add(button1)
         sizer.Add(button2)
+        sizer.Add(version_info)
         panel.SetSizer(sizer)
         self.Bind(wx.EVT_BUTTON, self.on_click, button1)
         self.Bind(wx.EVT_BUTTON, self.on_click2, button2)
@@ -139,6 +141,7 @@ class PreviewEvent(wx.Panel):
         self.set_bgimg(data)
         self.build_widgets(data)
         self.Layout()
+        self.Refresh()
 
     def get_bitmap(self, img):
         if isinstance(img, wx.Bitmap):
