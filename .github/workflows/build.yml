@@ -1,0 +1,36 @@
+name: wxPython windows build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+    env:
+      python: "3.11"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON }}
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip wheel setuptools wxpython cxFreeze
+      - name: cxFreeze build
+        run: python setup.py build
+      - name: Packaging
+        run: |
+          cd build/exe.win-amd64-3.11
+          7z a ../../wxtest.7z .
+      - name: Archive artifacts
+        uses: actions/upload-artifacts@v4
+        with:
+          name: windows-build
+          path: wxtest.7z
